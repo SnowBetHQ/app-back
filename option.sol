@@ -7,6 +7,8 @@ contract SnowBet {
     uint8 constant LOW = 1;
     uint8 constant RANGE = 2;
     uint8 constant HIGH = 3;
+    uint256 constant ENDTIME = 10 minutes;
+    uint256 constant ENDBET = 5 minutes;
 
     struct Option {
         address payable creator;
@@ -23,14 +25,15 @@ contract SnowBet {
     int256 public expiration_price;
     uint256 public endBet;
     uint256 public endTime;
+    uint256 public totalvalue;
 
     AggregatorV3Interface private dataFeed;
     Option[] public options;
 
     constructor() {
         dataFeed = AggregatorV3Interface(0x0715A7794a1dc8e42615F059dD6e406A6594651A);
-        endTime = block.timestamp + 10 minutes;
-        endBet = block.timestamp + 5 minutes;
+        endTime = block.timestamp + ENDTIME;
+        endBet = block.timestamp + ENDBET;
         function_called = false;
         pool = 0;
         owner = payable(msg.sender);
@@ -90,6 +93,7 @@ contract SnowBet {
         require(msg.value == 0.001 ether, "Please send exactly 0.01 Ether.");
         getETHUSDPriceData();
         createOption(payable(msg.sender), HIGH);
+        totalvalue = options.length * uint(1e15);
     }
     
     function betRange() external payable {
@@ -97,6 +101,7 @@ contract SnowBet {
         require(msg.value == 0.001 ether, "Please send exactly 0.01 Ether.");
         getETHUSDPriceData();
         createOption(payable(msg.sender), RANGE);
+        totalvalue = options.length * uint(1e15);
     }
 
     function betLow() external payable {
@@ -104,6 +109,7 @@ contract SnowBet {
         require(msg.value == 0.001 ether, "Please send exactly 0.01 Ether.");
         getETHUSDPriceData();
         createOption(payable(msg.sender), LOW);
+        totalvalue = options.length * uint(1e15);
     }
 
     function createOption(address payable _sender, uint8 ticket_type) internal {
