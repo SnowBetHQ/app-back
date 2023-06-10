@@ -15,6 +15,7 @@ contract SnowBet {
         bool win;
     }
 
+    address payable private owner;
     bool public function_called;
     int256 private strike_price;
     uint256 public pool;
@@ -28,10 +29,11 @@ contract SnowBet {
 
     constructor() {
         dataFeed = AggregatorV3Interface(0x0715A7794a1dc8e42615F059dD6e406A6594651A);
-        endTime = block.timestamp + 90 seconds;
-        endBet = block.timestamp + 60 seconds;
+        endTime = block.timestamp + 10 minutes;
+        endBet = block.timestamp + 5 minutes;
         function_called = false;
         pool = 0;
+        owner = payable(msg.sender);
     }
 
     function setExpirationPrice() public {
@@ -79,6 +81,8 @@ contract SnowBet {
                 option.win = false;
             }
         }
+        if (pool == 0)
+            owner.transfer(address(this).balance);
     }
 
     function betHigh() external payable {
@@ -111,16 +115,17 @@ contract SnowBet {
         require(pool > 0, "Empty pool.");
         require(function_called == true, "Set the winner first.");
         
-        uint256 transferAmount = (options.length * uint256(1e15)) / pool;
+        uint256 transferAmount = (options.length * (uint256(1e15) - uint256(3e13))) / pool;
 
         for (uint256 i = 0; i < options.length; i++) {
-           // Option storage option = options[i];
            if (options[i].win == true)
                 options[i].creator.transfer(transferAmount);
         }
+        owner.transfer(address(this).balance);
     }
 
-    function getOptionCount() external view returns (uint256) {
+    function getOptionCount() public view returns (uint256) {
         return options.length;
     }
+
 }
