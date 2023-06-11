@@ -15,8 +15,8 @@ contract SnowBet {
     uint8 constant LOW = 1;
     uint8 constant RANGE = 2;
     uint8 constant HIGH = 3;
-    uint256 constant ENDTIME = 3 minutes;
-    uint256 constant ENDBET = 2 minutes;
+    uint256 constant ENDTIME = 30 minutes;
+    uint256 constant ENDBET = 15 minutes;
     int256 constant PRICEINDOLLAR = 100000000;
     int256 constant PRICEWITHDEC = 1000000;
     uint256 constant TICKETVALUE = 1e15;
