@@ -15,8 +15,8 @@ contract SnowBet {
     uint8 constant LOW = 1;
     uint8 constant RANGE = 2;
     uint8 constant HIGH = 3;
-    uint256 constant ENDTIME = 10 minutes;
-    uint256 constant ENDBET = 5 minutes;
+    uint256 constant ENDTIME = 3 minutes;
+    uint256 constant ENDBET = 2 minutes;
     int256 constant PRICEINDOLLAR = 100000000;
     int256 constant PRICEWITHDEC = 1000000;
     uint256 constant TICKETVALUE = 1e15;
@@ -76,21 +76,21 @@ contract SnowBet {
             Option storage option = options[i];
 
             if (option.ticket_type == HIGH) {
-                if (option.strike_price * 105 / 100 < expiration_price) {
+                if (option.strike_price * 101 / 100 < expiration_price) {
                     option.win = true;
                     pool++;
                 } else {
                     option.win = false;
                 }
             } else if (option.ticket_type == LOW) {
-                if (option.strike_price * 95 / 100 > expiration_price) {
+                if (option.strike_price * 99 / 100 > expiration_price) {
                     option.win = true;
                     pool++;
                 } else {
                     option.win = false;
                 }
             } else if (option.ticket_type == RANGE) {
-                if (option.strike_price * 95 / 100 <= expiration_price && expiration_price <= option.strike_price * 105 / 100) {
+                if (option.strike_price * 99 / 100 <= expiration_price && expiration_price <= option.strike_price * 101 / 100) {
                     option.win = true;
                     pool++;
                 } else {
